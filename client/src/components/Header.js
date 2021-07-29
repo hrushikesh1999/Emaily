@@ -3,47 +3,133 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Payments from "./Payments";
 
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import Menu from "@material-ui/core/Menu";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import { Button } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  grow: {
+    flexGrow: 1,
+  },
+
+  title: {
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
+    },
+    color: "white",
+  },
+
+  sectionDesktop: {
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
+    },
+  },
+  sectionMobile: {
+    display: "flex",
+    [theme.breakpoints.up("md")]: {
+      display: "none",
+    },
+  },
+}));
+
 const Header = (props) => {
+  const classes = useStyles();
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
   const renderContent = () => {
     switch (props.auth) {
       case null:
-        return <div className="pt-4"></div>;
+        return <div></div>;
       case false:
         return (
-          <li>
-            <a href="/auth/google" className="btn btn-outline-light ">
+          <div>
+            <Button color="inherit" href="/auth/google">
               Login With Google
-            </a>
-          </li>
+            </Button>
+          </div>
         );
       default:
         return (
           <React.Fragment>
-            <li>
+            <div>
               <Payments></Payments>
-            </li>
-            <li style={{ margin: "5px 20px 0 10px ", color: "white" }}>
-              <h5>Credits: {props.auth.credits}</h5>
-            </li>
-            <li>
-              <a href="/api/logout" className="btn btn-outline-light">
-                Logout
-              </a>
-            </li>
+            </div>
+            <Typography style={{ margin: "6px 0px 10px 10px " }}>
+              Credits: {props.auth.credits}
+            </Typography>
+
+            <Button
+              color="inherit"
+              href="/api/logout"
+              style={{ margin: " 0px 0px 5px 10px" }}
+            >
+              Logout
+            </Button>
           </React.Fragment>
         );
     }
   };
+
+  const mobileMenuId = "primary-search-account-menu-mobile";
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      {renderContent()}
+    </Menu>
+  );
+
   return (
-    <div>
-      <nav className="navbar navbar-light bg-secondary  ">
-        <div className="container-fluid container">
-          <Link to={props.auth ? "/surveys" : "/"} className="navbar-brand ">
-            <h1 className="text-white">Emaily</h1>
+    <div className={classes.grow}>
+      <AppBar position="static">
+        <Toolbar>
+          <Link
+            to={props.auth ? "/surveys" : "/"}
+            style={{ textDecoration: "none" }}
+          >
+            <Typography className={classes.title} variant="h4" noWrap>
+              Emaily
+            </Typography>
           </Link>
-          <ul className=" list-unstyled pt-2 nav item ">{renderContent()}</ul>
-        </div>
-      </nav>
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>{renderContent()}</div>
+          <div className={classes.sectionMobile}>
+            <IconButton
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </div>
+        </Toolbar>
+      </AppBar>
+      {renderMobileMenu}
     </div>
   );
 };
