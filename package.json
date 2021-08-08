@@ -27,6 +27,7 @@
     "nodemon": "^2.0.9",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
+    "react-hook-form": "^6.15.8",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "redux-thunk": "^2.3.0",

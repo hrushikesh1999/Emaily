@@ -66,24 +66,23 @@ const Header = (props) => {
           </div>
         );
       default:
-        return (
-          <React.Fragment>
-            <div>
-              <Payments></Payments>
-            </div>
-            <Typography style={{ margin: "6px 0px 10px 10px " }}>
-              Credits: {props.auth.credits}
-            </Typography>
+        return [
+          <div key="1">
+            <Payments></Payments>
+          </div>,
+          <Typography style={{ margin: "6px 0px 10px 10px " }} key="2">
+            Credits: {props.auth.credits}
+          </Typography>,
 
-            <Button
-              color="inherit"
-              href="/api/logout"
-              style={{ margin: " 0px 0px 5px 10px" }}
-            >
-              Logout
-            </Button>
-          </React.Fragment>
-        );
+          <Button
+            color="inherit"
+            href="/api/logout"
+            style={{ margin: " 0px 0px 5px 10px" }}
+            key="3"
+          >
+            Logout
+          </Button>,
+        ];
     }
   };
 
